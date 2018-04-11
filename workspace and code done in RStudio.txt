@@ -1,0 +1,148 @@
+
+
+
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library("plyr", lib.loc="~/R/win-library/3.4")
+> library("dplyr", lib.loc="~/R/win-library/3.4")
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:plyr':
+
+    arrange, count, desc, failwith, id, mutate, rename, summarise, summarize
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> library("tidyr", lib.loc="~/R/win-library/3.4")
+> library("ggplot2", lib.loc="~/R/win-library/3.4")
+> library(readxl)
+> refine_original <- read_excel("C:/Users/Anthony/stackdatastack/springboard/intro to data sci/refine.xlsx")
+> View(refine_original)
+> 
+> 
+> refine_original <- refine_original %>% 
++   mutate(company = ifelse(grepl("^phil|^fil|^phl", company, ignore.case = TRUE), "philips", company)) %>% 
++   mutate(company = ifelse(grepl("ak", company, ignore.case = TRUE), "akzo", company)) %>% 
++   mutate(company = ifelse(grepl("van", company, ignore.case = TRUE), "van houten", company)) %>% 
++   mutate(company = ifelse(grepl("uni", company, ignore.case = TRUE), "unilever", company))
+> 
+> 
+> refine_original <- refine_original %>% 
++   separate(col = "Product code / number",
++            into = c("product_code", "product_number"),
++            sep = "-")
+> 
+> 
+> refine_original <- refine_original %>% 
++   mutate(product_categories = ifelse(grepl("p", product_code), "Smartphone", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("v", product_code), "TV", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("x", product_code), "Laptop", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("q", product_code), "Tablet", product_categories))
+Error in mutate_impl(.data, dots) : 
+  Evaluation error: object 'product_categories' not found.
+> mutate(refine_original,product_categories)
+Error in mutate_impl(.data, dots) : 
+  Binding not found: product_categories.
+> mutate(refine_original,product_categories = 0)
+# A tibble: 25 x 8
+   company product_code product_number address             city   country         name            product_categories
+   <chr>   <chr>        <chr>          <chr>               <chr>  <chr>           <chr>                        <dbl>
+ 1 philips p            5              Groningensingel 147 arnhem the netherlands dhr p. jansen                   0.
+ 2 philips p            43             Groningensingel 148 arnhem the netherlands dhr p. hansen                   0.
+ 3 philips x            3              Groningensingel 149 arnhem the netherlands dhr j. Gansen                   0.
+ 4 philips x            34             Groningensingel 150 arnhem the netherlands dhr p. mansen                   0.
+ 5 philips x            12             Groningensingel 151 arnhem the netherlands dhr p. fransen                  0.
+ 6 philips p            23             Groningensingel 152 arnhem the netherlands dhr p. franssen                 0.
+ 7 akzo    v            43             Leeuwardenweg 178   arnhem the netherlands dhr p. bansen                   0.
+ 8 akzo    v            12             Leeuwardenweg 179   arnhem the netherlands dhr p. vansen                   0.
+ 9 akzo    x            5              Leeuwardenweg 180   arnhem the netherlands dhr p. bransen                  0.
+10 akzo    p            34             Leeuwardenweg 181   arnhem the netherlands dhr p. janssen                  0.
+# ... with 15 more rows
+> refine_original
+# A tibble: 25 x 7
+   company product_code product_number address             city   country         name           
+   <chr>   <chr>        <chr>          <chr>               <chr>  <chr>           <chr>          
+ 1 philips p            5              Groningensingel 147 arnhem the netherlands dhr p. jansen  
+ 2 philips p            43             Groningensingel 148 arnhem the netherlands dhr p. hansen  
+ 3 philips x            3              Groningensingel 149 arnhem the netherlands dhr j. Gansen  
+ 4 philips x            34             Groningensingel 150 arnhem the netherlands dhr p. mansen  
+ 5 philips x            12             Groningensingel 151 arnhem the netherlands dhr p. fransen 
+ 6 philips p            23             Groningensingel 152 arnhem the netherlands dhr p. franssen
+ 7 akzo    v            43             Leeuwardenweg 178   arnhem the netherlands dhr p. bansen  
+ 8 akzo    v            12             Leeuwardenweg 179   arnhem the netherlands dhr p. vansen  
+ 9 akzo    x            5              Leeuwardenweg 180   arnhem the netherlands dhr p. bransen 
+10 akzo    p            34             Leeuwardenweg 181   arnhem the netherlands dhr p. janssen 
+# ... with 15 more rows
+> refine_original <- refine_original %>% mutate(product_categories = 0)
+> 
+> refine_original <- refine_original %>% 
++   mutate(company = ifelse(grepl("^phil|^fil|^phl", company, ignore.case = TRUE), "philips", company)) %>% 
++   mutate(company = ifelse(grepl("ak", company, ignore.case = TRUE), "akzo", company)) %>% 
++   mutate(company = ifelse(grepl("van", company, ignore.case = TRUE), "van houten", company)) %>% 
++   mutate(company = ifelse(grepl("uni", company, ignore.case = TRUE), "unilever", company))
+> refine_original <- refine_original %>% 
++   mutate(product_categories = ifelse(grepl("p", product_code), "Smartphone", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("v", product_code), "TV", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("x", product_code), "Laptop", product_categories)) %>% 
++   mutate(product_categories = ifelse(grepl("q", product_code), "Tablet", product_categories))
+> 
+> 
+> refine_original <- refine_original %>% 
++   mutate(full_address = coalesce(address, city, country))
+> 
+> 
+> refine_original <- refine_original %>% 
++   unite(full_address, address:country, sep = ",", remove = FALSE))
+Error: unexpected ')' in:
+"refine_original <- refine_original %>% 
+  unite(full_address, address:country, sep = ",", remove = FALSE))"
+> refine_original <- refine_original %>% 
++   unite(full_address, address:country, sep = ",", remove = FALSE)
+> refine_original <- refine_original %>% 
++   unite(full_address, address:country, sep = ", ", remove = FALSE)
+> refine_original <- refine_original %>% 
++   mutate(company_philips = ifelse(grepl("philips", company), 1, 0)) %>% 
++   mutate(company_akzo = ifelse(grepl("akzo", company),  1, 0)) %>% 
++   mutate(company_van_houten = ifelse(grepl("van houten", company),  1, 0)) %>% 
++   mutate(company_unilever = ifelse(grepl("unilever", company),  1, 0)) %>% 
++   mutate(product_smartphone = ifelse(grepl("Smartphone", product_categories),  1, 0)) %>% 
++   mutate(product_tv = ifelse(grepl("TV", product_categories),  1, 0)) %>% 
++   mutate(product_laptop = ifelse(grepl("Laptop", product_categories),  1, 0)) %>% 
++   mutate(product_tablet = ifelse(grepl("Tablet", product_categories),  1, 0))
+> refine_clean <- refine_original
+> View(refine_clean)
+> View(refine_clean)
+> View(refine_original)
+> View(refine_original)
+> View(refine_clean)
+> View(refine_clean)
+> View(refine_original)
+> 
+> 
+> write.csv(refine_clean, file = "refine_clean.csv")
+> library(readxl)
+> refine <- read_excel("C:/Users/Anthony/stackdatastack/springboard/intro to data sci/refine.xlsx")
+> View(refine)
+> refine_original <- refine
+> write.csv(refine_original, file = "refine_original.csv")
